@@ -1,0 +1,69 @@
+﻿<div class="container mt-5">
+    <div class="row text-center mb-5 border-bottom">
+        <div class="col-4 pb-3 border-bottom border-dark border-3">
+            <span class="fw-bold h5">Pendiente</span>
+        </div>
+        <div class="col-4 pb-3">
+            <span class="text-muted h5">En preparación</span>
+        </div>
+        <div class="col-4 pb-3">
+            <span class="text-muted h5">Listo para entrega</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5 col-lg-4">
+            <div class="card shadow-sm border-0 bg-white" style="border-radius: 8px;">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold mb-5">@ViewBag.NombreOrden</h4>
+
+                    <div class="row fw-bold text-secondary mb-3" style="font-size: 0.85rem; letter-spacing: 0.5px;">
+                        <div class="col-5">Nombre</div>
+                        <div class="col-2 text-center">Cant.</div>
+                        <div class="col-2 text-center">Nota</div>
+                        <div class="col-3 text-end">Precio</div>
+                    </div>
+
+                    @foreach (var d in ViewBag.Detalles)
+                    {
+                        <div class="row align-items-center mb-4">
+                            <div class="col-5">
+                                <div class="d-flex flex-column align-items-start">
+                                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=60"
+                                         class="rounded mb-2 shadow-sm"
+                                         style="width: 50px; height: 50px; object-fit: cover;" />
+                                    <span class="fw-bold lh-sm" style="font-size: 0.85rem;">@d.NombrePlatillo</span>
+                                </div>
+                            </div>
+
+                            <div class="col-2 text-center fw-normal">
+                                @d.Cantidad
+                            </div>
+
+                            <div class="col-2 text-center text-muted">
+                                <span style="font-size: 0.8rem;">
+                                    @(string.IsNullOrEmpty(d.Comentarios) || d.Comentarios == "-" ? "—" : d.Comentarios)
+                                </span>
+                            </div>
+
+                            <div class="col-3 text-end fw-bold">
+                                $@d.Subtotal.ToString("F2")
+                            </div>
+                        </div>
+                    }
+
+                    <div class="my-5" style="height: 40px;"></div>
+
+                    <div class="border-top pt-4 mt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="h5 fw-bold mb-0">Total</span>
+                            <span class="h4 fw-bold mb-0 text-dark">$@ViewBag.Total.ToString("F2")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7 col-lg-8 bg-light opacity-25"></div>
+    </div>
+</div>

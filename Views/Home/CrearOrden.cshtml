@@ -1,0 +1,173 @@
+﻿@model List<LaAbejita.Models.Inventory>
+
+<div class="order-container">
+    <div class="row">
+        <div class="col-md-5">
+            <h3 class="fw-bold mb-4">Platillos disponibles</h3>
+
+            <div id="listaPlatillos">
+                @if (ViewBag.ListaPlatillos != null)
+                {
+                    var platillos = ViewBag.ListaPlatillos as List<LaAbejita.Models.Inventory>; //cuando llega a crear orden saca la lista de os platillos en la lista llamada ListaPlatillos
+                    foreach (var platillo in platillos)
+                    {
+                        <div class="platillo-selection-card">
+                            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=200" class="platillo-selection-img" alt="@platillo.NombrePlatillo">
+
+                            <div class="platillo-selection-info">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="fw-bold mb-1">@platillo.NombrePlatillo</h6>
+                                        <p class="text-muted small mb-1">@platillo.Descripcion</p>
+                                        <span class="fw-bold text-dark small">$@platillo.Precio</span>
+                                    </div>
+                                    <button class="btn-seleccionar shadow-sm" onclick="agregarPlatillo(@platillo.Id, '@platillo.NombrePlatillo', @platillo.Precio)">
+                                        Seleccionar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="ticket-container">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-bold mb-0">Hoja de Pedido</h3>
+                    <button type="button" class="btn-close" onclick="location.href='@Url.Action("Index", "Home")'"></button>
+                </div>
+
+                <div class="mb-4">
+                    <label class="small fw-bold text-muted">Nombre de la orden:</label>
+                    <input type="text" id="nombreOrden" value="Orden" class="form-control border-0 bg-light rounded-3" />
+                </div>
+
+                <div class="row fw-bold text-muted small border-bottom pb-2 mb-0">
+                    <div class="col-5">Nombre</div>
+                    <div class="col-2 text-center">Cant.</div>
+                    <div class="col-3">Comentario</div>
+                    <div class="col-2 text-end">Precio</div>
+                </div>
+
+                <div id="hojaOrden" class="mb-4" style="max-height: 400px; overflow-y: auto;">
+                </div>
+
+                <div class="pt-3 border-top">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold mb-0">Total</h4>
+                        <h3 class="fw-bold mb-0">$<span id="totalOrden">0</span></h3>
+                    </div>
+
+                    <button type="button"
+                            class="btn w-100 py-3 fw-bold shadow-sm"
+                            style="background-color: #fdd835; border-radius: 12px; border: none;"
+                            onclick="finalizarOrden()">
+                        Finalizar orden
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var orden = []; //va a guardar aqui todos los platillos que el usuario agregue
+
+    function agregarPlatillo(id, nombre, precio) { //funcion que se ajecuta cuando el usuario le da al boton agregar
+        // Verifica si ESE platillo ya está en la orden
+        var existente = orden.find(p => p.idPlatillo === id);
+        if (existente) {
+            existente.cantidad += 1; //si el platillo ya esta ahi la cantidad se sumara
+        } else { //sino entoncds se agregara como nuevo platilo en orden
+            orden.push({ idPlatillo: id, nombre: nombre, cantidad: 1, comentarios: '', precioUnitario: precio });
+        }
+        actualizarHojaOrden(); //se llama a la funcion
+    }
+
+    function actualizarHojaOrden() {
+        var contenedor = document.getElementById('hojaOrden');
+        contenedor.innerHTML = ''; //sirve para evitar duplicados de tarjetas
+
+        var total = 0;
+
+        orden.forEach((platillo, index) => { //por cada platillo dentro del arrglo orden
+            total += platillo.precioUnitario * platillo.cantidad; //para el subtotal de todo
+
+            var div = document.createElement('div');
+            div.className = 'row align-items-center py-3 border-bottom';
+
+            //esto se mostrara cada vez que el usuario seleccione un platillo
+            //cuando el usuario da al boton agregar, cada pklatillo tendra su boton de eliminar tambien
+            div.innerHTML = `
+                <div class="col-5">
+                    <div class="fw-bold small text-truncate">${platillo.nombre}</div>
+                </div>
+                <div class="col-2 text-center">
+                    <input type="number" min="1" value="${platillo.cantidad}" onchange="cambiarCantidad(${index}, this.value)" class="form-control form-control-sm border-0 bg-light text-center" />
+                </div>
+                <div class="col-3">
+                    <input type="text" value="${platillo.comentarios}" oninput="cambiarComentario(${index}, this.value)" class="form-control form-control-sm border-0 bg-light" placeholder="..." />
+                </div>
+                <div class="col-2 text-end d-flex align-items-center justify-content-end">
+                    <span class="small fw-bold me-2">$${(platillo.precioUnitario * platillo.cantidad).toFixed(2)}</span>
+                    <button class="btn btn-sm text-danger p-0" onclick="eliminarPlatillo(${index})">&times;</button>
+                </div>
+            `;
+
+            contenedor.appendChild(div); //agregar el div en el contenedor
+        });
+
+        document.getElementById('totalOrden').innerText = total.toFixed(2); //para el total de toda la orden
+    }
+
+    function cambiarCantidad(index, cantidad) { //para cambiar cantidad
+        orden[index].cantidad = parseInt(cantidad) || 1;
+        actualizarHojaOrden();
+    }
+
+    function cambiarComentario(index, comentario) { //cambiar comentario en la hija nombre
+        orden[index].comentarios = comentario;
+    }
+
+    function eliminarPlatillo(index) { //eliminar los platillos de la hoja orden
+        orden.splice(index, 1);
+        actualizarHojaOrden();
+    }
+
+    function finalizarOrden() {
+        if (orden.length === 0) {
+            alert("No hay platillos en la orden");
+            return;
+        }
+
+        var nombre = document.getElementById('nombreOrden').value;
+        if (!nombre) nombre = 'Orden';
+
+        var data = {
+            nombreOrden: nombre,
+            detalles: orden
+        };
+
+        fetch('/Home/FinalizarOrden', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al guardar la orden');
+            }
+            return response.text(); //aquí recibimos el idOrden
+        })
+        .then(idOrden => {
+            window.location.href = '/Home/DetalleOrden/' + idOrden;
+        })
+        .catch(error => {
+            alert(error.message);
+        });
+    }
+</script>

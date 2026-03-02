@@ -1,0 +1,24 @@
+﻿@model LaAbejita.Models.Inventory
+
+<h2>Agregar Platillo</h2>
+
+<form asp-action="Crear" method="post">
+    <div>
+        <label>Nombre del platillo</label><br />
+        <input asp-for="NombrePlatillo" />
+    </div>
+
+    <div>
+        <label>Descripción</label><br />
+        <input asp-for="Descripcion" />
+    </div>
+
+    <div>
+        <label>Precio</label><br />
+        <input asp-for="Precio" type="number" step="0.01" />
+    </div>
+
+    <br />
+
+    <button type="submit">Guardar</button>
+</form>

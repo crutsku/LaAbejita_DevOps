@@ -1,0 +1,133 @@
+/* --- Configuración Base --- */
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin-bottom: 60px;
+    background-color: #f8f9fa; /* Fondo gris claro para resaltar tarjetas blancas */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- Navbar Amarilla (Estilo La Abejita) --- */
+.navbar-abeja {
+    background-color: #fdd835 !important;
+    padding: 0.8rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: none !important;
+}
+
+.nav-link-abeja {
+    color: white !important;
+    font-weight: 500;
+    margin: 0 15px;
+    text-decoration: none;
+}
+
+/* --- Botones Estilo Aplicación --- */
+.btn-platillo-top, .btn-seleccionar {
+    background-color: #fdd835;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 20px;
+    font-weight: bold;
+    color: #333;
+    transition: all 0.2s;
+}
+
+    .btn-platillo-top:hover, .btn-seleccionar:hover {
+        background-color: #fbc02d;
+        transform: scale(1.02);
+    }
+
+/* --- Vista de Inventario (Tarjetas con Imagen) --- */
+.platillo-card {
+    border: none !important;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    background-color: #ffffff;
+    transition: transform 0.3s ease;
+}
+
+.card-img-top {
+    height: 180px;
+    object-fit: cover;
+    background-color: #f0f0f0;
+}
+
+/* --- Vista Crear Orden (Layout Dividido) --- */
+.order-container {
+    padding: 20px 0;
+}
+
+/* Tarjetas de selección (Lista Izquierda) */
+.platillo-selection-card {
+    display: flex;
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: none;
+    overflow: hidden;
+}
+
+.platillo-selection-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.platillo-selection-info {
+    flex-grow: 1;
+    padding: 12px;
+}
+
+/* Panel de Hoja de Pedido (Derecha - Ticket) */
+.ticket-container {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 20px;
+}
+
+/* Inputs minimalistas dentro del ticket */
+.ticket-input {
+    border: none !important;
+    background-color: #f8f9fa !important;
+    border-radius: 8px !important;
+    font-size: 0.9rem;
+}
+
+/* --- Utilidades --- */
+.hidden {
+    display: none;
+}
+
+.abeja-title {
+    color: #2f2f2f;
+    font-weight: bold;
+}
+
+.search-input {
+    border-radius: 25px;
+    padding: 10px 20px;
+    border: 1px solid #eee;
+}
+
+/* Ajustes para el formulario de agregar */
+.abeja-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
