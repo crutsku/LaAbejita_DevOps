@@ -1,0 +1,89 @@
+﻿@model LaAbejita.Models.RegisterRequest
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+
+            <h3 class="fw-bold mb-3">Registra tu cuenta</h3>
+
+            <div class="mb-2">
+                <input type="text" id="nombre" class="form-control" placeholder="Nombre">
+            </div>
+
+            <div class="mb-2">
+                <input type="text" id="apellidoPaterno" class="form-control" placeholder="Apellido paterno">
+            </div>
+
+            <div class="mb-2">
+                <input type="text" id="apellidoMaterno" class="form-control" placeholder="Apellido materno">
+            </div>
+
+            <div class="mb-2">
+                <input type="text" id="username" class="form-control" placeholder="Nombre de usuario">
+            </div>
+
+            <div class="mb-2">
+                <select id="rol" class="form-control">
+                    <option value="">Selecciona un rol</option>
+                    <option value="1">Administrador</option>
+                    <option value="2">Cocinero</option>
+                </select>
+            </div>
+
+            <div class="mb-2">
+                <input type="text" id="numeroCelular" class="form-control" placeholder="Tu móvil">
+            </div>
+
+            <div class="mb-3">
+                <input type="password" id="contrasena" class="form-control" placeholder="Crea una contraseña">
+            </div>
+
+            <button class="btn btn-warning w-100" onclick="registrarUsuario()">
+                Registrar cuenta
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function registrarUsuario() {
+
+        var data = {
+            nombre: document.getElementById("nombre").value,
+            apellidoPaterno: document.getElementById("apellidoPaterno").value,
+            apellidoMaterno: document.getElementById("apellidoMaterno").value,
+            username: document.getElementById("username").value,
+            rol: parseInt(document.getElementById("rol").value),
+            numeroCelular: document.getElementById("numeroCelular").value,
+            contrasena: document.getElementById("contrasena").value
+        };
+
+        if (!data.nombre || !data.apellidoPaterno || !data.username || !data.rol || !data.contrasena) {
+            alert("Debes llenar los campos obligatorios");
+            return;
+        }
+
+        fetch('/Home/Registro', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error al registrar usuario");
+            }
+            return response.text();
+        })
+        .then(result => {
+            alert("Usuario registrado correctamente");
+            window.location.href = "/Home/Index";
+        })
+        .catch(error => {
+            alert(error.message);
+        });
+    }
+
+</script>

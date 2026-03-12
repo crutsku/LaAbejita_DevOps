@@ -247,6 +247,50 @@ namespace LaAbejita.Controllers
             return RedirectToAction("Index"); //unha vez el usuario haya agregado el platillo desde el front se va al metodo Index 
         }
 
+        [HttpPost]
+        public IActionResult Registro([FromBody] RegisterRequest register)
+        {
+            var connectionString = _configuration.GetConnectionString("SQLServer");
+
+            const string query = @"INSERT INTO Restaurante.dbo.Usuarios
+        (Nombre, ApellidoPaterno, ApellidoMaterno, Username, Rol, NumeroCelular, Contrasena)
+        VALUES (@Nombre, @ApellidoPaterno, @ApellidoMaterno, @Username, @Rol, @NumeroCelular, @Contrasena)";
+
+            try
+            {
+                using var conn = new SqlConnection(connectionString);
+                using var cmd = new SqlCommand(query, conn)
+                {
+                    CommandTimeout = 300
+                };
+
+                cmd.Parameters.AddWithValue("@Nombre", register.Nombre);
+                cmd.Parameters.AddWithValue("@ApellidoPaterno", register.ApellidoPaterno);
+                cmd.Parameters.AddWithValue("@ApellidoMaterno", register.ApellidoMaterno);
+                cmd.Parameters.AddWithValue("@Username", register.Username);
+                cmd.Parameters.AddWithValue("@Rol", (int)register.Rol);
+                cmd.Parameters.AddWithValue("@NumeroCelular", register.NumeroCelular);
+                cmd.Parameters.AddWithValue("@Contrasena", register.Contrasena);
+
+                conn.Open();
+
+                cmd.ExecuteNonQuery();
+
+                TempData["SuccessMessage"] = "Usuario registrado correctamente";
+            }
+            catch
+            {
+
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Registro()
+        {
+            return View();
+        }
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
